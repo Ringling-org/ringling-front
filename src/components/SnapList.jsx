@@ -1,0 +1,14 @@
+import SnapCard from './SnapCard.jsx'
+import styles from "./SnapListPage.module.css"
+
+export default function SnapList({ snaps, loading }) {
+    if (loading) return <div>로딩중...</div>
+    return (
+        <div className={styles.centerWrapper}>
+            <h1>Snap 목록</h1>
+            {snaps.map(snap => (
+                <SnapCard key={snap.id} snap={snap}/>
+            ))}
+        </div>
+    )
+}

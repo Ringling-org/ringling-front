@@ -1,12 +1,12 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Placeholder from './components/Placeholder.jsx'
+import SnapListPage from "./pages/SnapListPage";
 
 function App() {
 
   return (
       <BrowserRouter>
           <Routes>
-              <Route path="/" element={<Placeholder />} />
+              <Route path="/" element={<SnapListPage />} />
           </Routes>
       </BrowserRouter>
   )

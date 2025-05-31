@@ -1,0 +1,15 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    width: 100vw;
+    box-sizing: border-box;
+}
+
+.formWrapper {
+    margin-top: 20px;
+    width: 50vw;
+    display: flex;
+    justify-content: center;
+}
