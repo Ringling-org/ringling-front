@@ -1,15 +1,11 @@
 .form {
+    width: clamp(350px, 50vw, 500px);
+    margin: clamp(12px, 6vh, 15px) auto clamp(8px, 2vh, 24px) auto;
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 20px 24px;
-    background: #fff;
-    border: 1px solid #eee;
+    padding: clamp(8px, 4vw, 20px);
     border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-    margin-bottom: 24px;
-    max-width: 600px;
-    width: 100%;
     box-sizing: border-box;
 }
 
@@ -30,8 +26,8 @@
 }
 
 .button {
-    padding: 10px 24px;
-    font-size: 16px;
+    padding: clamp(0.5rem, 1vw, 0.75rem) clamp(1rem, 2vw, 1.5rem);
+    font-size: clamp(0.875rem, 1.5vw, 1rem);
     font-weight: bold;
     background: #1976d2;
     color: #fff;
@@ -39,6 +35,7 @@
     border-radius: 8px;
     cursor: pointer;
     transition: background 0.18s;
+    white-space: nowrap;
 }
 
 .button:hover,
