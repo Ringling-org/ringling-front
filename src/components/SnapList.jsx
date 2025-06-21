@@ -1,5 +1,5 @@
 import SnapCard from './SnapCard.jsx'
-import styles from "./SnapListPage.module.css"
+import styles from "./SnapList.module.css"
 
 export default function SnapList({ snaps, loading }) {
     if (loading) return <div>로딩중...</div>
