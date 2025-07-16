@@ -8,8 +8,63 @@
     margin: 0 auto;
 }
 
+.header {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-self: flex-end;
+
+    margin-top: clamp(0.5rem, 3vh, 1.5rem);
+    padding: 0 clamp(1rem, 5vw, 2rem);
+    box-sizing: border-box;
+}
+
 .formWrapper {
     width: 50vw;
     display: flex;
     justify-content: center;
+}
+
+.loginButton {
+    padding: clamp(0.5rem, 1vw, 0.75rem) clamp(1rem, 2vw, 1.5rem);
+    font-size: clamp(0.875rem, 1.5vw, 1rem);
+    font-weight: bold;
+
+    background-color: #28a745;
+    color: #fff;
+
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    white-space: nowrap;
+
+    transition: background-color 0.18s, transform 0.15s ease;
+}
+
+.loginButton:hover,
+.loginButton:focus {
+    background-color: #218838;
+    transform: scale(1.03);
+}
+
+.logoutButton {
+    padding: clamp(0.5rem, 1vw, 0.75rem) clamp(1rem, 2vw, 1.5rem);
+    font-size: clamp(0.875rem, 1.5vw, 1rem);
+    font-weight: bold;
+
+    background-color: #dc3545;
+    color: #fff;
+
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    white-space: nowrap;
+
+    transition: background-color 0.18s, transform 0.15s ease;
+}
+
+.logoutButton:hover,
+.logoutButton:focus {
+    background-color: #c82333;
+    transform: scale(1.03);
 }
