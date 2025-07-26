@@ -1,12 +1,16 @@
 import { createContext, useState, useEffect } from 'react';
 import { decodeToken } from "../utils/JwtUtils.js";
 import { logoutWithKakao } from "../api/authApi.js";
+import { getUserInfo } from "../api/userApi.js";
 
 export const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
     const [accessToken, setAccessToken] = useState(localStorage.getItem('accessToken'));
-    const [user, setUser] = useState(null);
+    // const [user, setUser] = useState(null);
+    const [auth, setAuth] = useState(null);
+    const [userInfo, setUserInfo] = useState(null);
+
 
     const saveAccessToken = (token) => localStorage.setItem('accessToken', token);
     const saveRefreshToken = (token) => localStorage.setItem('refreshToken', token);
@@ -14,21 +18,29 @@ export const AuthProvider = ({ children }) => {
     const removeRefreshToken = () => localStorage.removeItem('refreshToken');
 
     useEffect(() => {
-        if (accessToken) {
+        const initAuth = async () => {
+            if (!accessToken) {
+                setAuth(null);
+                setUserInfo(null);
+                return;
+            }
+
             try {
                 const decodedUser = decodeToken(accessToken);
-                setUser(decodedUser);
-                console.log("사용자 정보가 업데이트되었습니다:", decodedUser); // Debugging log
+                setAuth(decodedUser);
+
+                const userInfo = await getUserInfo(decodedUser.sub);
+                setUserInfo(userInfo.data);
             } catch (error) {
                 console.error("토큰 오류, 세션을 초기화합니다:", error);
                 setAccessToken(null);
-                setUser(null);
+                setAuth(null);
                 removeAccessToken();
                 removeRefreshToken();
             }
-        } else {
-            setUser(null);
         }
+
+        initAuth();
     }, [accessToken]);
 
     const login = ({ accessToken, refreshToken }) => {
@@ -52,9 +64,9 @@ export const AuthProvider = ({ children }) => {
     };
 
     const value = {
-        user,
-        accessToken,
-        isLoggedIn: !!user,
+        auth,
+        userInfo,
+        isLoggedIn: !!auth && !!userInfo,
         login,
         logout
     };

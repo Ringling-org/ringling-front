@@ -1,13 +1,13 @@
 import SnapForm from '../components/SnapForm.jsx';
 import SnapList from '../components/SnapList.jsx';
 import useSnap from "../hooks/useSnap.js";
-import { useAuth } from "../hooks/useAuth.js";
-import { getKakaoAuthUrl } from '../api/authApi';
 import styles from './SnapListPage.module.css';
+import { getKakaoAuthUrl } from '../api/authApi';
+import { useAuth } from "../hooks/useAuth.js";
 
 export default function SnapListPage() {
     const { snaps, loading, addSnap } = useSnap();
-    const { user, isLoggedIn, logout } = useAuth();
+    const { userInfo, isLoggedIn, logout } = useAuth();
 
     const handleLogin = () => {
         window.location.href = getKakaoAuthUrl();
