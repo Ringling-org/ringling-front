@@ -1,17 +1,23 @@
-import { useState } from 'react'
+import {useState} from 'react'
 import styles from './SnapForm.module.css'
 
 export default function SnapForm({ onSubmit }) {
     const [url, setUrl] = useState('')
 
-    function handleSubmit(e) {
+    const handleSubmit = async (e) => {
         e.preventDefault()
         if (!url) return alert('URL을 입력하세요')
-        onSubmit(url)
-        setUrl('')
+        try {
+            await onSubmit(url)
+        } catch  {
+            alert("등록중 오류가 발생했습니다.")
+        } finally {
+            setUrl('')
+        }
     }
 
     return (
+        <>
         <form onSubmit={handleSubmit} className={styles.form}>
             <input
                 type="text"
@@ -22,5 +28,6 @@ export default function SnapForm({ onSubmit }) {
             />
             <button type="submit" className={styles.button}>등록</button>
         </form>
+        </>
     )
 }

@@ -7,10 +7,8 @@ export const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
     const [accessToken, setAccessToken] = useState(localStorage.getItem('accessToken'));
-    // const [user, setUser] = useState(null);
     const [auth, setAuth] = useState(null);
     const [userInfo, setUserInfo] = useState(null);
-
 
     const saveAccessToken = (token) => localStorage.setItem('accessToken', token);
     const saveRefreshToken = (token) => localStorage.setItem('refreshToken', token);
@@ -66,6 +64,7 @@ export const AuthProvider = ({ children }) => {
     const value = {
         auth,
         userInfo,
+        accessToken,
         isLoggedIn: !!auth && !!userInfo,
         login,
         logout
