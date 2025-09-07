@@ -1,20 +1,40 @@
-const API_BASE = import.meta.env.VITE_API_BASE_URL;
+import axios from 'axios';
 
-export async function apiClient(path, options = {}, accessToken) {
-    const headers = {
-        ...(options.headers || {}),
-        ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+const { VITE_API_BASE_URL } = import.meta.env;
+
+export const requestWithAuth = axios.create({
+    baseURL: VITE_API_BASE_URL
+})
+
+export const request = axios.create({
+    baseURL: VITE_API_BASE_URL
+})
+
+requestWithAuth.interceptors.request.use(
+    config => {
+        const accessToken = localStorage.getItem('accessToken');
+        if (accessToken) {
+            config.headers['Authorization'] = `Bearer ${accessToken}`
+        }
+        return config;
+    },
+    error => {
+        return Promise.reject(error);
     }
+);
 
-    const res = await fetch(`${API_BASE}${path}`, {
-        ...options,
-        headers,
-    })
-
-    if (!res.ok) {
-        const text = await res.text()
-        throw new Error(`HTTP ${res.status}: ${text}`)
+requestWithAuth.interceptors.response.use(
+    response => response,
+    async (error) => {
+        if (error.response?.status === 401) {
+            console.log("인증불가")
+        }
+        return Promise.reject(error);
     }
+);
 
-    return res.json()
-}
+export const HEADERS = Object.freeze({
+    URL_ENCODED: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    JSON: { 'Content-Type': 'application/json' },
+    MULTIPART: { 'Content-Type': 'multipart/form-data' },
+});

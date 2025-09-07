@@ -1,10 +1,17 @@
+import { request, HEADERS } from './apiClient.js'
+
 const {
-    VITE_API_BASE_URL,
     VITE_APP_BASE_URL,
     VITE_KAKAO_REST_API_KEY,
     VITE_KAKAO_LOGIN_REDIRECT_PATH,
     VITE_KAKAO_AUTH_URL
 } = import.meta.env
+
+export const AUTH_API = Object.freeze({
+    LOGIN_KAKAO: '/auth/login/kakao',
+    LOGOUT_KAKAO: '/auth/logout/kakao',
+    SIGNUP_KAKAO: '/auth/signup/kakao',
+});
 
 /**
  * 카카오 로그인 페이지 URL 생성
@@ -26,20 +33,13 @@ export function getKakaoAuthUrl(state = 'login') {
  * @returns {Promise<object>} - 백엔드 서버가 반환하는 JSON 객체
  */
 export async function loginWithKakao(code) {
-    const res = await fetch(`${VITE_API_BASE_URL}/auth/login/kakao`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({ code }),
-    });
+    const result = await request.post(
+        AUTH_API.LOGIN_KAKAO,
+        new URLSearchParams({ code }),
+        { headers: HEADERS.URL_ENCODED }
+    );
 
-    if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(`서버 통신 오류: ${res.status} - ${errorText}`);
-    }
-
-    return await res.json();
+    return result.data;
 }
 
 /**
@@ -48,19 +48,13 @@ export async function loginWithKakao(code) {
  * @returns {Promise<any>}
  */
 export async function logoutWithKakao(accessToken) {
-    const res = await fetch(`${VITE_API_BASE_URL}/auth/logout/kakao`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: new URLSearchParams({ accessToken }),
-    });
+    const result = await request.post(
+        AUTH_API.LOGOUT_KAKAO,
+        new URLSearchParams({ accessToken }),
+        { headers: HEADERS.URL_ENCODED }
+    )
 
-    if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(`서버 통신 오류: ${res.status} - ${errorText}`);
-    }
-    return await res.json();
+    return result.data;
 }
 
 /**
@@ -69,18 +63,11 @@ export async function logoutWithKakao(accessToken) {
  * @returns {Promise<object>} - 백엔드 서버가 반환하는 JSON 객체
  */
 export async function signUp(signupInfo) {
-    const res = await fetch(`${VITE_API_BASE_URL}/auth/signup/kakao`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams(signupInfo),
-    });
+    const result = await request.post(
+        AUTH_API.SIGNUP_KAKAO,
+        new URLSearchParams(signupInfo),
+        { headers: HEADERS.URL_ENCODED }
+    )
 
-    if (!res.ok) {
-        const errorData = await res.json().catch(() => ({ message: '서버 응답을 처리할 수 없습니다.' }));
-        throw new Error(errorData.message || `서버 통신 오류: ${res.status}`);
-    }
-
-    return await res.json();
+    return await result.data;
 }

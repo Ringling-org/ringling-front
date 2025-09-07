@@ -4,7 +4,7 @@ import { createSnap, createSnapForGuest, getSnaps } from '../api/snapApi.js'
 
 export default function useSnap() {
     const [snaps, setSnaps] = useState([])
-    const { accessToken, isLoggedIn } = useAuth();
+    const { isLoggedIn } = useAuth();
     const [listLoading, setListLoading] = useState(true);
     const [submitLoading, setSubmitLoading] = useState(false);
     const [guestSnap, setGuestSnap] = useState(null);
@@ -26,7 +26,7 @@ export default function useSnap() {
                 setGuestSnap(result);
                 return result;
             }
-            await createSnap(url, accessToken);
+            await createSnap(url);
             await loadSnaps();
         } finally {
             setSubmitLoading(false)

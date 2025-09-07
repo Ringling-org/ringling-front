@@ -9,8 +9,8 @@ export default function SnapForm({ onSubmit }) {
         if (!url) return alert('URL을 입력하세요')
         try {
             await onSubmit(url)
-        } catch  {
-            alert("등록중 오류가 발생했습니다.")
+        } catch {
+            alert("Snap 등록 중 오류가 발생했습니다.")
         } finally {
             setUrl('')
         }

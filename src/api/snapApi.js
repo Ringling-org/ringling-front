@@ -1,34 +1,37 @@
-import { apiClient } from './apiClient.js'
+import { request, requestWithAuth, HEADERS } from './apiClient.js'
 
-const apiUrl = import.meta.env.VITE_API_BASE_URL;
+export const SNAP_API = Object.freeze({
+    GET: '/snap',         // GET /snap
+    CREATE: '/snap',      // POST /snap
+    CREATE_GUEST: '/snap/guest', // POST /snap/guest
+});
 
 export async function getSnaps() {
-
-    const res = await apiClient(`/snap`)
-    return res;
+    const result = await request.get(
+        SNAP_API.GET,
+        { headers: HEADERS.JSON }
+    )
+    return result.data;
 }
 
-export async function createSnap(url, accessToken) {
+export async function createSnap(url) {
     const params = new URLSearchParams({ url }).toString();
 
-    return apiClient("/snap", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: params,
-    }, accessToken);
+    const result = await requestWithAuth.post(
+        SNAP_API.CREATE,
+        params,
+        { headers: HEADERS.URL_ENCODED }
+    )
+    return result.data;
 }
 
 export async function createSnapForGuest(url) {
     const params = new URLSearchParams({url : url}).toString()
 
-    const res = await fetch(`${apiUrl}/snap/guest`, {
-       method: 'POST',
-       headers: {
-           'Content-Type': 'application/x-www-form-urlencoded',
-       },
-    body: params
-    })
-    return await res.json()
+    const result = await request.post(
+        SNAP_API.CREATE_GUEST,
+        params,
+        { headers: HEADERS.URL_ENCODED }
+    )
+    return await result.data;
 }
