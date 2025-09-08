@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useAuth } from './useAuth.js'
+import { useAuth } from '../context/AuthContext.jsx'
 import { createSnap, createSnapForGuest, getSnaps } from '../api/snapApi.js'
 
 export default function useSnap() {

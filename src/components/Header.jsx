@@ -1,4 +1,4 @@
-import { useAuth } from "../hooks/useAuth.js";
+import { useAuth } from "../context/AuthContext.jsx"
 import styles from './Header.module.css';
 import {getKakaoAuthUrl} from "../api/authApi.js";
 
