@@ -35,7 +35,7 @@ export default function LoginPage() {
         };
 
         doLogin();
-    }, [code, login, navigate]);
+    }, []);
 
     return (
         <Spinner message={"로그인 중입니다...!!"}/>
