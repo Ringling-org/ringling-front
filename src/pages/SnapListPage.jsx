@@ -5,6 +5,8 @@ import SnapCard from '../components/SnapCard.jsx'
 import useSnap from "../hooks/useSnap.js";
 import styles from './SnapListPage.module.css';
 import Spinner from "../components/CommonSpinner.jsx";
+import NotificationInput from "../components/ReminderNotificationInput.jsx";
+import { createReminderNotification } from '../api/notificationApi.js'
 import Modal from "react-modal"
 
 const SNAP_MODAL_STYLE = {
@@ -31,26 +33,47 @@ const SNAP_MODAL_STYLE = {
 export default function SnapListPage() {
     const {
         snaps, listLoading, submitLoading, addSnap,
-        guestSnap, clearGuestSnap
+        guestSnap, clearGuestSnap,
+        createdSnap, clearReminderNotification
     } = useSnap();
+
+    const handleNotificationConfirm = async (selectedDateTimeFromModal) => {
+        const payload = {
+            snapId: createdSnap.id,
+            notificationTime: selectedDateTimeFromModal
+        };
+
+        await createReminderNotification(payload);
+        alert("알림이 등록되었습니다.")
+        clearReminderNotification()
+    }
 
     return (
         <>
             {(listLoading || submitLoading) && <Spinner />}
             <div className={styles.container}>
-                <Header />
+                <Header/>
                 <div className={styles.formWrapper}>
                     <SnapForm onSubmit={addSnap}/>
                 </div>
-                <SnapList snaps={snaps} loading={listLoading} />
+                <SnapList snaps={snaps} loading={listLoading}/>
                 <Modal
                     isOpen={Boolean(guestSnap)}
                     onRequestClose={clearGuestSnap}
                     style={SNAP_MODAL_STYLE}
                     contentLabel="Snap Result"
                 >
-                    {guestSnap && <SnapCard snap={guestSnap} />}
+                    {guestSnap && <SnapCard snap={guestSnap}/>}
                 </Modal>
+
+                {createdSnap &&
+                    <NotificationInput
+                        isOpen={Boolean(createdSnap)}
+                        onClose={clearReminderNotification}
+                        onConfirm={handleNotificationConfirm}
+                    />
+                }
+
             </div>
         </>
     );

@@ -8,6 +8,7 @@ export default function useSnap() {
     const [listLoading, setListLoading] = useState(true);
     const [submitLoading, setSubmitLoading] = useState(false);
     const [guestSnap, setGuestSnap] = useState(null);
+    const [createdSnap, setCreatedSnap] = useState(null); // 회원용 모달 상태
 
     const loadSnaps  = async () => {
         setListLoading(true)
@@ -26,7 +27,8 @@ export default function useSnap() {
                 setGuestSnap(result);
                 return result;
             }
-            await createSnap(url);
+            const newSnap = await createSnap(url);
+            setCreatedSnap(newSnap);
             await loadSnaps();
         } finally {
             setSubmitLoading(false)
@@ -37,5 +39,9 @@ export default function useSnap() {
         setGuestSnap(null);
     };
 
-    return { snaps, listLoading, submitLoading, addSnap, guestSnap, clearGuestSnap }
+    const clearReminderNotification = () => {
+        setCreatedSnap(null);
+    }
+
+    return { snaps, listLoading, submitLoading, addSnap, guestSnap, clearGuestSnap, createdSnap, clearReminderNotification }
 }
