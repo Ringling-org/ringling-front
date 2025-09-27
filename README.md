@@ -1,12 +1,12 @@
-# React + Vite
+## 서비스 목적
+- 지금 바로 보기 힘든 콘텐츠(URL)를 저장하고, 여유로운 시간(출퇴근 등)에 알림으로 다시 확인할 수 있도록 돕는 서비스
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 핵심 기능
+1. **URL 입력** → 본문에서 간단한 **제목 자동 추출**
+2. **리스트 관리** → 제목 / 등록 시간 / 등록자 표시
+3. **알림 설정** → 지정한 시간에 푸시 알림으로 리마인드
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+👉 한 줄 요약  
+**“보고 싶은 콘텐츠를 저장해두고, 집중할 수 있는 시간에 알림으로 다시 꺼내주는 URL 리마인드 서비스”**

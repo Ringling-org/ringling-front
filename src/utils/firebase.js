@@ -1,0 +1,50 @@
+import { initializeApp } from "firebase/app";
+import { onMessage, getMessaging, getToken } from "firebase/messaging";
+import { refreshFcmToken } from "../api/notificationApi.js"
+
+const { VITE_VAPID_KEY } = import.meta.env;
+const FIREBASE_WEB_CONFIG = {
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID,
+    measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
+};
+
+const app = initializeApp(FIREBASE_WEB_CONFIG);
+export const messaging = getMessaging(app);
+
+export async function issueFcmToken() {
+    try {
+        const currentToken = await getToken(messaging, {
+            vapidKey: VITE_VAPID_KEY,
+        });
+        if (currentToken) {
+            console.log("👉 FCM Token:", currentToken);
+            return currentToken;
+        } else {
+            console.log("토큰을 가져올 수 없음");
+        }
+    } catch (err) {
+        console.error("토큰 가져오기 에러", err);
+    }
+}
+
+export async function syncFcmToken() {
+    try {
+        const newToken = await issueFcmToken();
+        if (!newToken) return;
+
+        refreshFcmToken(newToken);
+
+        return newToken;
+    } catch (err) {
+        console.error("❌ FCM 토큰 동기화 실패:", err);
+    }
+}
+
+onMessage(messaging, (payload) => {
+    alert(`🔔 새 알림: ${payload.notification?.title}\n${payload.notification?.body}`);
+});
