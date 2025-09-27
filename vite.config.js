@@ -17,9 +17,26 @@ export default defineConfig({
                 description: '출근길에 저장 콘텐츠를 푸시 알림해봐요!', // 앱 설명
                 icons: [
                     {
-                        src: 'vite.svg',
-                        sizes: 'any',
-                        type: 'image/svg+xml'
+                        src: '/icons/icon-16.png',
+                        sizes: '16x16',
+                        type: 'image/png'
+                    },
+                    {
+                        src: '/icons/icon-32.png',
+                        sizes: '32x32',
+                        type: 'image/png'
+                    },
+                    {
+                        src: '/icons/icon-192.png',
+                        sizes: '192x192',
+                        type: 'image/png',
+                        purpose: 'any maskable'
+                    },
+                    {
+                        src: '/icons/icon-512.png',
+                        sizes: '512x512',
+                        type: 'image/png',
+                        purpose: 'any maskable'
                     }
                 ]
             },
