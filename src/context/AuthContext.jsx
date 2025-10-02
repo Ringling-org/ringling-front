@@ -43,7 +43,7 @@ export const AuthProvider = ({children}) => {
     const initUserInfo = async (accessToken) => {
         let decodedUser = decodeToken(accessToken);
         const userInfo = await getUserInfo(decodedUser.sub);
-        setUserInfo(userInfo.data);
+        await setUserInfo(userInfo.data);
     }
 
     return (
