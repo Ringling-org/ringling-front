@@ -1,6 +1,9 @@
 import { useState } from "react";
 import Modal from "react-modal";
 import styles from './ReminderNotificationInput.module.css';
+import {IoClose} from "react-icons/io5";
+import { BsClock } from "react-icons/bs";
+
 
 const getTomorrowAt9AM = () => {
     const tomorrow = new Date();
@@ -32,18 +35,12 @@ export default function ReminderNotificationInput({ isOpen, onClose, onConfirm }
                     onClick={onClose}
                     className={styles.closeButton}
                 >
-                    ×
+                    <IoClose className={styles.closeIcon}/>
                 </button>
 
                 <div className={styles.iconContainer}>
-                    <div className={styles.clockIcon}>
-                        <svg
-                            className={styles.clockSvg}
-                            viewBox="0 0 24 24"
-                        >
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <polyline points="12,6 12,12 16,14"></polyline>
-                        </svg>
+                    <div className={styles.iconCircle}>
+                        <BsClock className={styles.iconClock}/>
                     </div>
                 </div>
 

@@ -27,13 +27,18 @@
 
 .closeButton {
     position: absolute;
-    top: 8px;
-    right: 12px;
-    font-size: 20px;
+    top: 16px;
+    right: 16px;
+    background: none;
     border: none;
-    background: transparent;
     cursor: pointer;
-    color: red;
+    padding: 4px;
+    color: #6b7280;
+    transition: color 0.2s;
+}
+.closeIcon {
+    width: 24px;
+    height: 24px;
 }
 
 .iconContainer {
@@ -42,7 +47,7 @@
     margin-bottom: 16px;
 }
 
-.clockIcon {
+.iconCircle {
     width: 48px;
     height: 48px;
     background-color: #dcfce7;
@@ -52,12 +57,10 @@
     justify-content: center;
 }
 
-.clockSvg {
+.iconClock {
     width: 24px;
     height: 24px;
     color: #16a34a;
-    fill: none;
-    stroke: currentColor;
 }
 
 .modalTitle {
