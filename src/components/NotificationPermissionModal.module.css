@@ -1,0 +1,145 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 50;
+}
+
+.modalContent {
+    background-color: white;
+    border-radius: 12px;
+    padding: 32px 24px;
+    max-width: 50vh;
+    width: 100%;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    position: relative;
+}
+
+.closeButton {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    color: #6b7280;
+    transition: color 0.2s;
+}
+.closeButton:hover {
+    color: #374151;
+}
+.closeIcon {
+    width: 24px;
+    height: 24px;
+}
+
+.iconContainer {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 24px;
+}
+.iconCircle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: #dcfce7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.bellIcon {
+    width: 40px;
+    height: 40px;
+    color: #16a34a;
+}
+
+.modalTitle {
+    font-size: 24px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 12px;
+    color: #111827;
+}
+.modalDescription {
+    font-size: 15px;
+    color: #6b7280;
+    text-align: center;
+    line-height: 1.6;
+    margin-bottom: 32px;
+}
+
+.permissionInfo {
+    background-color: #f9fafb;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 24px;
+}
+.infoTitle {
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 12px;
+}
+.infoList {
+    list-style: none;
+    padding: 0;
+}
+.infoItem {
+    font-size: 14px;
+    color: #6b7280;
+    padding: 6px 0;
+    padding-left: 20px;
+    position: relative;
+    line-height: 1.5;
+}
+.infoItem::before {
+    content: "•";
+    position: absolute;
+    left: 8px;
+    color: #16a34a;
+    font-weight: bold;
+}
+
+.buttonContainer {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+}
+.button {
+    flex: 1;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+}
+.buttonCancel {
+    background-color: #f3f4f6;
+    color: #374151;
+}
+.buttonCancel:hover {
+    background-color: #e5e7eb;
+}
+.buttonConfirm {
+    background-color: #16a34a;
+    color: white;
+}
+.buttonConfirm:hover {
+    background-color: #15803d;
+}
+.button:active {
+    transform: scale(0.98);
+}
