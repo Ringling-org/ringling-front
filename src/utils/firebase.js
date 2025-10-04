@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { onMessage, getMessaging, getToken } from "firebase/messaging";
-import { refreshFcmToken } from "../api/notificationApi.js"
+import { refreshFcmToken } from "../api/fcmApi.js"
 
 const { VITE_VAPID_KEY } = import.meta.env;
 const FIREBASE_WEB_CONFIG = {
