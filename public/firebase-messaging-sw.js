@@ -17,8 +17,10 @@ firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
-    self.registration.showNotification(payload.notification.title, {
-        body: payload.notification.body,
-        icon: "/icons/icons-128.png",
-    });
+    const title = payload.data.title;
+    const options = {
+        body: payload.data.body
+    };
+
+    self.registration.showNotification(title, options);
 });

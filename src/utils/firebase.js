@@ -46,5 +46,20 @@ export async function syncFcmToken() {
 }
 
 onMessage(messaging, (payload) => {
-    alert(`🔔 새 알림: ${payload.notification?.title}\n${payload.notification?.body}`);
+    const title = payload.data.title;
+    const options = {
+        body: payload.data.body,
+    };
+
+    if (Notification.permission === "granted") {
+        new Notification(title, options);
+    } else {
+        Notification.requestPermission().then((permission) => {
+            if (permission === "granted") {
+                new Notification(title, options);
+            } else {
+                console.warn("❌ 알림 권한이 없어 표시되지 않았습니다.");
+            }
+        });
+    }
 });
