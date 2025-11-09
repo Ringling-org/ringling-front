@@ -17,10 +17,10 @@ export default function LoginPage() {
 
         const doLogin = async () => {
             try {
-                const { code: responseCode, data } = await loginWithKakao(code);
+                const { code: responseCode, data: accessToken } = await loginWithKakao(code);
 
                 if (responseCode === "SUCCESS") {
-                    login({ accessToken: data.accessToken, refreshToken: data.refreshToken });
+                    login(accessToken);
                     return navigate('/');
                 } else if (responseCode === "AU001") {
                     return navigate('/signup');

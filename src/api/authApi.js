@@ -1,4 +1,5 @@
-import { request, HEADERS } from './apiClient.js'
+import {request, requestWithAuth, HEADERS} from './apiClient.js'
+import {storeAccessToken} from "../context/authStore.js";
 
 const {
     VITE_APP_BASE_URL,
@@ -11,6 +12,7 @@ export const AUTH_API = Object.freeze({
     LOGIN_KAKAO: '/auth/login/kakao',
     LOGOUT_KAKAO: '/auth/logout/kakao',
     SIGNUP_KAKAO: '/auth/signup/kakao',
+    SILENT_REFRESH: '/auth/refresh',
 });
 
 /**
@@ -36,7 +38,7 @@ export async function loginWithKakao(code) {
     const result = await request.post(
         AUTH_API.LOGIN_KAKAO,
         new URLSearchParams({ code }),
-        { headers: HEADERS.URL_ENCODED }
+        { withCredentials: true },
     );
 
     return result.data;
@@ -47,11 +49,11 @@ export async function loginWithKakao(code) {
  * @param accessToken
  * @returns {Promise<any>}
  */
-export async function logoutWithKakao(accessToken) {
-    const result = await request.post(
+export async function logoutWithKakao() {
+    const result = await requestWithAuth.post(
         AUTH_API.LOGOUT_KAKAO,
-        new URLSearchParams({ accessToken }),
-        { headers: HEADERS.URL_ENCODED }
+        null,
+        { withCredentials: true },
     )
 
     return result.data;
@@ -70,4 +72,27 @@ export async function signUp(signupInfo) {
     )
 
     return await result.data;
+}
+
+/**
+ * 쿠키에 저장된 RefreshToken을 사용해 AccessToken을 재발행
+ * (세션 유지 및 자동 로그인 갱신용)
+ */
+export async function silentRefresh() {
+    const result = await request.post(
+        AUTH_API.SILENT_REFRESH,
+        null,
+        { withCredentials: true }
+    )
+
+    const { code, data, message } = result.data;
+    if (code === "SUCCESS") {
+        storeAccessToken(data);
+        return data;
+    }
+    else if (code === "AU004" || code === "AU005") {
+        return null;
+    }
+
+    throw new Error(message || "unKnownError");
 }
