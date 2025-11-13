@@ -42,7 +42,6 @@
     text-decoration: none;
     word-break: break-all;
     display: inline-block;
-    width: fit-content;
     max-width: 300px;
     overflow: hidden;
     text-overflow: ellipsis;
