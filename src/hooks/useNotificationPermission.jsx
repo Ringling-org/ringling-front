@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext.jsx";
 
 export function useNotificationPermission() {
     const { isLoggedIn, userInfo } = useAuth();
-    const [notificationPermission, setNotificationPermission] = useState(Notification.permission);
+    const [notificationPermission, setNotificationPermission] = useState(Notification.permission.state);
     const [needsPermissionPrompt, setNeedsPermissionPrompt] = useState(false);
 
     useEffect(() => {
@@ -39,10 +39,10 @@ export function useNotificationPermission() {
         let permissionStatusRef = null;
         navigator.permissions.query({ name: 'notifications' }).then((permissionStatus) => {
             permissionStatusRef = permissionStatus;
-            onStateChange(permissionStatus);
+            onStateChange(permissionStatus.state);
             permissionStatus.onchange = () => {
                 if (permissionStatusRef) {
-                    onStateChange(permissionStatus);
+                    onStateChange(permissionStatus.state);
                 }
             };
         }).catch((error) => {
