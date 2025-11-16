@@ -8,5 +8,5 @@ export async function getUserInfo(id) {
     const result = await requestWithAuth.get(
         USER_API.INFO(id)
     );
-    return result.data;
+    return result;
 }

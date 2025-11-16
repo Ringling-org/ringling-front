@@ -60,9 +60,7 @@ export const AuthProvider = ({children}) => {
     const refreshAuthSession = useCallback(async () => {
         try {
             const accessToken = await silentRefresh();
-            if (accessToken) {
-                await login(accessToken);
-            }
+            login(accessToken);
         } catch (error) {
             console.error(error);
             setUserInfo(null);
@@ -74,8 +72,7 @@ export const AuthProvider = ({children}) => {
             const decodedUser = decodeToken(accessToken);
             if (!decodedUser?.sub) throw new Error("유효하지않은 token")
 
-            const response = await getUserInfo(decodedUser.sub);
-            const newUserData = response.data;
+            const newUserData = await getUserInfo(decodedUser.sub);
 
             // 기존 userInfo와 비교 후 변경 시에만 갱신
             setUserInfo(prevUserInfo => {

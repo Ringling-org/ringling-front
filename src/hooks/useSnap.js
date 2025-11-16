@@ -12,8 +12,8 @@ export default function useSnap() {
 
     const loadSnaps  = async () => {
         setListLoading(true)
-        const { data } = await getSnaps()
-        setSnaps(Array.isArray(data) ? data : []);
+        const snaps = await getSnaps()
+        setSnaps(Array.isArray(snaps) ? snaps : []);
         setListLoading(false)
     }
 
@@ -23,9 +23,9 @@ export default function useSnap() {
         setSubmitLoading(true)
         try {
             if (!isLoggedIn) {
-                let result = await createSnapForGuest(url);
-                setGuestSnap(result);
-                return result;
+                const guestSnap = await createSnapForGuest(url);
+                setGuestSnap(guestSnap);
+                return guestSnap;
             }
             const newSnap = await createSnap(url);
             setCreatedSnap(newSnap);

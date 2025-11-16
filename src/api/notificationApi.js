@@ -10,5 +10,5 @@ export async function createReminderNotification(payload){
         payload,
         { headers: HEADERS.JSON }
     )
-    return result.data;
+    return result;
 }

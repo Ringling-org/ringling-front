@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { loginWithKakao } from '../api/authApi.js';
 import { useAuth } from "../context/AuthContext.jsx";
 import Spinner from '../components/CommonSpinner.jsx';
+import {ApplicationError} from "../api/ApplicationError.js";
 
 export default function LoginPage() {
     const location = useLocation();
@@ -17,18 +18,20 @@ export default function LoginPage() {
 
         const doLogin = async () => {
             try {
-                const { code: responseCode, data: accessToken } = await loginWithKakao(code);
+                const accessToken = await loginWithKakao(code);
+                login(accessToken);
+                return navigate('/');
+            } catch (error) {
+                if (error instanceof ApplicationError) {
+                    if (error.code === 'AU001') {
+                        return navigate('/signup');
+                    }
 
-                if (responseCode === "SUCCESS") {
-                    login(accessToken);
-                    return navigate('/');
-                } else if (responseCode === "AU001") {
-                    return navigate('/signup');
-                } else {
                     alert("알 수 없는 응답코드로 로그인에 실패했습니다.");
                     return navigate('/');
                 }
-            } catch {
+
+                console.error("비정상적인 에러 발생:", error);
                 alert("로그인에 실패했습니다. 잠시 후 다시 시도해주세요.");
                 return navigate('/');
             }

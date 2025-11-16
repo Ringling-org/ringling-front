@@ -5,11 +5,10 @@ export const FCM_TOKEN_API  = Object.freeze({
 });
 
 export async function refreshFcmToken(token) {
-    const payload = { token };
     const result = await requestWithAuth.post(
         FCM_TOKEN_API.REFRESH,
-        payload,
+        { token },
         { headers: HEADERS.JSON }
     );
-    return result.data;
+    return result;
 }

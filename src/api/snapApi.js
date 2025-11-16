@@ -11,7 +11,7 @@ export async function getSnaps() {
         SNAP_API.GET,
         { headers: HEADERS.JSON }
     )
-    return result.data;
+    return result;
 }
 
 export async function createSnap(url) {
@@ -22,16 +22,14 @@ export async function createSnap(url) {
         params,
         { headers: HEADERS.URL_ENCODED }
     )
-    return result.data;
+    return result;
 }
 
 export async function createSnapForGuest(url) {
-    const params = new URLSearchParams({url : url}).toString()
-
     const result = await request.post(
         SNAP_API.CREATE_GUEST,
-        params,
+        new URLSearchParams({url: url}).toString(),
         { headers: HEADERS.URL_ENCODED }
     )
-    return await result.data;
+    return result;
 }

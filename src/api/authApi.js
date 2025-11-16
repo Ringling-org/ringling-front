@@ -1,5 +1,6 @@
 import {request, requestWithAuth, HEADERS} from './apiClient.js'
 import {storeAccessToken} from "../context/authStore.js";
+import {ApplicationError} from "./ApplicationError.js";
 
 const {
     VITE_APP_BASE_URL,
@@ -32,7 +33,7 @@ export function getKakaoAuthUrl(state = 'login') {
 /**
  * 카카오 인가 코드를 내부 벡엔드 서버로 전송하고, 서버의 응답을 반환합니다.
  * @param {string} code - 카카오로부터 받은 인가 코드
- * @returns {Promise<object>} - 백엔드 서버가 반환하는 JSON 객체
+ * @returns {Promise<object>} - 백엔드 서버가 AccessToken 정보
  */
 export async function loginWithKakao(code) {
     const result = await request.post(
@@ -41,7 +42,7 @@ export async function loginWithKakao(code) {
         { withCredentials: true },
     );
 
-    return result.data;
+    return result
 }
 
 /**
@@ -56,7 +57,7 @@ export async function logoutWithKakao() {
         { withCredentials: true },
     )
 
-    return result.data;
+    return result;
 }
 
 /**
@@ -71,7 +72,7 @@ export async function signUp(signupInfo) {
         { headers: HEADERS.URL_ENCODED }
     )
 
-    return await result.data;
+    return result;
 }
 
 /**
@@ -79,20 +80,11 @@ export async function signUp(signupInfo) {
  * (세션 유지 및 자동 로그인 갱신용)
  */
 export async function silentRefresh() {
-    const result = await request.post(
+    const accessToken = await request.post(
         AUTH_API.SILENT_REFRESH,
         null,
         { withCredentials: true }
     )
-
-    const { code, data, message } = result.data;
-    if (code === "SUCCESS") {
-        storeAccessToken(data);
-        return data;
-    }
-    else if (code === "AU004" || code === "AU005") {
-        return null;
-    }
-
-    throw new Error(message || "unKnownError");
+    storeAccessToken(accessToken);
+    return accessToken;
 }
