@@ -6,7 +6,13 @@ export default function SnapForm({ onSubmit }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        if (!url) return alert('URL을 입력하세요')
+        if (!url.trim()) return alert('URL을 입력하세요')
+
+        if (!isValidUrl(url)) {
+            alert('잘못된 URL 형식입니다.');
+            return;
+        }
+
         try {
             await onSubmit(url)
         } catch {
@@ -14,6 +20,11 @@ export default function SnapForm({ onSubmit }) {
         } finally {
             setUrl('')
         }
+    }
+
+    const isValidUrl = (input) => {
+        const url = input.trim();
+        return url.startsWith('http://') || url.startsWith('https://');
     }
 
     return (

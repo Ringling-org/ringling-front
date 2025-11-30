@@ -15,21 +15,21 @@ export async function getSnaps() {
 }
 
 export async function createSnap(url) {
-    const params = new URLSearchParams({ url }).toString();
-
+    const paylod = { url : url };
     const result = await requestWithAuth.post(
         SNAP_API.CREATE,
-        params,
-        { headers: HEADERS.URL_ENCODED }
+        paylod,
+        { headers: HEADERS.JSON }
     )
     return result;
 }
 
 export async function createSnapForGuest(url) {
+    const paylod = { url : url };
     const result = await request.post(
         SNAP_API.CREATE_GUEST,
-        new URLSearchParams({url: url}).toString(),
-        { headers: HEADERS.URL_ENCODED }
+        paylod,
+        { headers: HEADERS.JSON }
     )
     return result;
 }
