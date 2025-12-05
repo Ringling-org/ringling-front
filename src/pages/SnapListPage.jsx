@@ -33,10 +33,17 @@ const SNAP_MODAL_STYLE = {
 
 export default function SnapListPage() {
     const {
-        snaps, listLoading, submitLoading, addSnap,
+        snaps,
+        snapCounts,
+        activeTab,
+        setActiveTab,
+        listLoading,
+        submitLoading,
+        addSnap,
         guestSnap, clearGuestSnap,
-        createdSnap, clearReminderNotification
+        createdSnap, clearReminderNotification,
     } = useSnap();
+
 
     const handleNotificationConfirm = async (selectedDateTime) => {
         try {
@@ -75,6 +82,31 @@ export default function SnapListPage() {
                 <div className={styles.formWrapper}>
                     <SnapForm onSubmit={addSnap}/>
                 </div>
+
+                <div className={styles.tabSwitch}>
+                    <button
+                        type="button"
+                        className={`${styles.tabBtn} ${activeTab === 'my' ? styles.active : ''}`}
+                        onClick={() => setActiveTab('my')}
+                    >
+                        내 Snap 목록
+                        <span className={styles.countBadge}>
+                            {snapCounts.myCount}
+                        </span>
+                    </button>
+
+                    <button
+                        type="button"
+                        className={`${styles.tabBtn} ${activeTab === 'all' ? styles.active : ''}`}
+                        onClick={() => setActiveTab('all')}
+                    >
+                        전체 Snap 목록
+                        <span className={styles.countBadge}>
+                            {snapCounts.allCount}
+                        </span>
+                    </button>
+                </div>
+
                 <SnapList snaps={snaps} loading={listLoading}/>
                 <Modal
                     isOpen={Boolean(guestSnap)}

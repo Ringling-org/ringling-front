@@ -1,23 +1,52 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '../context/AuthContext.jsx'
-import { createSnap, createSnapForGuest, getSnaps } from '../api/snapApi.js'
+import { createSnap, createSnapForGuest, getSnaps, getSnapCounts } from '../api/snapApi.js'
 
 export default function useSnap() {
+    const [activeTab, setActiveTab] = useState('all');
     const [snaps, setSnaps] = useState([])
-    const { isLoggedIn } = useAuth();
+    const [snapCounts, setSnapCounts] = useState({ allCount : 0, myCount : 0})
+    const { userInfo, isLoggedIn } = useAuth();
     const [listLoading, setListLoading] = useState(true);
     const [submitLoading, setSubmitLoading] = useState(false);
     const [guestSnap, setGuestSnap] = useState(null);
     const [createdSnap, setCreatedSnap] = useState(null); // 회원용 모달 상태
 
-    const loadSnaps  = async () => {
+    const loadSnaps = async (selectedType = 'all') => {
         setListLoading(true)
-        const snaps = await getSnaps()
-        setSnaps(Array.isArray(snaps) ? snaps : []);
-        setListLoading(false)
+        try {
+            const snaps = await getSnaps(selectedType)
+            setSnaps(Array.isArray(snaps) ? snaps : []);
+        } catch (error) {
+            console.error("Failed to load snaps:", error);
+            setSnaps([]);
+        } finally {
+            setListLoading(false)
+        }
     }
 
-    useEffect(() => { loadSnaps() }, [])
+    const loadCounts = async () => {
+        try {
+            const count = await getSnapCounts();
+            setSnapCounts(count);
+        } catch (error) {
+            console.log("Failed to load counts:", error);
+        }
+    }
+
+    const handleTabChange = (newTab) => {
+        console.error(newTab)
+        if (newTab === activeTab) return; // 같은 탭이면 무시
+        setActiveTab(newTab);
+    };
+
+    useEffect(() => {
+        loadSnaps(activeTab)
+    }, [activeTab, userInfo])
+
+    useEffect(() => {
+        loadCounts()
+    }, [userInfo])
 
     const addSnap = async (url) => {
         setSubmitLoading(true)
@@ -29,7 +58,11 @@ export default function useSnap() {
             }
             const newSnap = await createSnap(url);
             setCreatedSnap(newSnap);
-            await loadSnaps();
+
+            await Promise.all([
+                loadSnaps(activeTab),
+                loadCounts()
+            ]);
         } finally {
             setSubmitLoading(false)
         }
@@ -43,5 +76,18 @@ export default function useSnap() {
         setCreatedSnap(null);
     }
 
-    return { snaps, listLoading, submitLoading, addSnap, guestSnap, clearGuestSnap, createdSnap, clearReminderNotification }
+    return {
+        snaps,
+        snapCounts,
+        activeTab,
+        setActiveTab: handleTabChange,
+        listLoading,
+        submitLoading,
+        addSnap,
+        guestSnap,
+        clearGuestSnap,
+        createdSnap,
+        clearReminderNotification,
+        loadSnaps
+    }
 }
