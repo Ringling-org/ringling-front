@@ -1,13 +1,17 @@
 .card {
     border-radius: 12px;
-    margin: 12px 0;
-    padding: 20px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    margin: 0;
+    padding: 30px;
     background: #fff;
-    width: clamp(280px, 80vw, 450px);
-    transition: box-shadow 0.2s;
+    width: 100%;
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
+    transition: transform 0.2s ease-out;
+}
+
+.card:hover {
+    transform: translateY(-2px);
 }
 
 .header {

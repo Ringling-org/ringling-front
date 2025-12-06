@@ -78,43 +78,43 @@ export default function SnapListPage() {
         <>
             {(listLoading || submitLoading) && <Spinner />}
             <div className={styles.container}>
-                <Header/>
-                <div className={styles.formWrapper}>
-                    <SnapForm onSubmit={addSnap}/>
+                <Header />
+
+                <div className={styles.listContainer}>
+                    <SnapForm onSubmit={addSnap} />
+                    <div className={styles.tabSwitch}>
+                        <button
+                            type="button"
+                            className={`${styles.tabBtn} ${activeTab === 'my' ? styles.active : ''}`}
+                            onClick={() => setActiveTab('my')}
+                        >
+                            내 Snap 목록
+                            <span className={styles.countBadge}>
+                                {snapCounts.myCount}
+                            </span>
+                        </button>
+
+                        <button
+                            type="button"
+                            className={`${styles.tabBtn} ${activeTab === 'all' ? styles.active : ''}`}
+                            onClick={() => setActiveTab('all')}
+                        >
+                            전체 Snap 목록
+                            <span className={styles.countBadge}>
+                                {snapCounts.allCount}
+                            </span>
+                        </button>
+                    </div>
+
+                    <SnapList snaps={snaps} loading={listLoading} />
                 </div>
-
-                <div className={styles.tabSwitch}>
-                    <button
-                        type="button"
-                        className={`${styles.tabBtn} ${activeTab === 'my' ? styles.active : ''}`}
-                        onClick={() => setActiveTab('my')}
-                    >
-                        내 Snap 목록
-                        <span className={styles.countBadge}>
-                            {snapCounts.myCount}
-                        </span>
-                    </button>
-
-                    <button
-                        type="button"
-                        className={`${styles.tabBtn} ${activeTab === 'all' ? styles.active : ''}`}
-                        onClick={() => setActiveTab('all')}
-                    >
-                        전체 Snap 목록
-                        <span className={styles.countBadge}>
-                            {snapCounts.allCount}
-                        </span>
-                    </button>
-                </div>
-
-                <SnapList snaps={snaps} loading={listLoading}/>
                 <Modal
                     isOpen={Boolean(guestSnap)}
                     onRequestClose={clearGuestSnap}
                     style={SNAP_MODAL_STYLE}
                     contentLabel="Snap Result"
                 >
-                    {guestSnap && <SnapCard snap={guestSnap}/>}
+                    {guestSnap && <SnapCard snap={guestSnap} />}
                 </Modal>
 
                 {createdSnap &&

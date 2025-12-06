@@ -1,6 +1,6 @@
 .form {
-    width: clamp(350px, 50vw, 500px);
-    margin: clamp(12px, 6vh, 15px) auto clamp(8px, 2vh, 24px) auto;
+    width: 100%;
+    margin: 0;
     display: flex;
     align-items: center;
     gap: 12px;
