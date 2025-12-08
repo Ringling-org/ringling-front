@@ -35,7 +35,6 @@ export default function useSnap() {
     }
 
     const handleTabChange = (newTab) => {
-        console.error(newTab)
         if (newTab === activeTab) return; // 같은 탭이면 무시
         setActiveTab(newTab);
     };

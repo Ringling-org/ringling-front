@@ -22,7 +22,6 @@ export async function issueFcmToken() {
             vapidKey: VITE_VAPID_KEY,
         });
         if (currentToken) {
-            console.log("👉 FCM Token:", currentToken);
             return currentToken;
         } else {
             console.log("토큰을 가져올 수 없음");
