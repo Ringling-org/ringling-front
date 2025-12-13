@@ -17,6 +17,9 @@
     box-sizing: border-box;
 }
 
+.snapItemWrapper {
+    padding-bottom: 30px;
+}
 
 /* --- 탭 스위치 영역 --- */
 .tabSwitch {

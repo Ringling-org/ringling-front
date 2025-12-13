@@ -1,6 +1,6 @@
 import Header from '../components/Header.jsx'
 import SnapForm from '../components/SnapForm.jsx';
-import SnapList from '../components/SnapList.jsx';
+import { Virtuoso } from 'react-virtuoso'
 import SnapCard from '../components/SnapCard.jsx'
 import useSnap from "../hooks/useSnap.js";
 import styles from './SnapListPage.module.css';
@@ -106,7 +106,15 @@ export default function SnapListPage() {
                         </button>
                     </div>
 
-                    <SnapList snaps={snaps} loading={listLoading} />
+                    <Virtuoso
+                        useWindowScroll
+                        data={snaps}
+                        itemContent={(_, item) => (
+                            <div key={item.id} className={styles.snapItemWrapper}>
+                                <SnapCard key={item.id} snap={item}/>
+                            </div>
+                        )}
+                    />
                 </div>
                 <Modal
                     isOpen={Boolean(guestSnap)}
