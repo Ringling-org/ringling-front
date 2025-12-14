@@ -7,15 +7,18 @@ export const SNAP_API = Object.freeze({
     CREATE_GUEST: '/snap/guest', // POST /snap/guest
 });
 
-export async function getSnaps(type = 'all') {
-    const result = await requestWithAuth.get(
+export async function getSnaps(scope = 'all', cursor, limit) {
+    return await requestWithAuth.get(
         SNAP_API.GET,
         {
             headers: HEADERS.URL_ENCODED,
-            params: {type: type ?? 'all'}
+            params: {
+                scope,
+                cursor : cursor,
+                limit
+            }
         }
     )
-    return result;
 }
 
 export async function getSnapCounts() {

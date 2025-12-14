@@ -37,7 +37,9 @@ export default function SnapListPage() {
         snapCounts,
         activeTab,
         setActiveTab,
+        loadSnaps,
         listLoading,
+        hasMore,
         submitLoading,
         addSnap,
         guestSnap, clearGuestSnap,
@@ -114,6 +116,20 @@ export default function SnapListPage() {
                                 <SnapCard key={item.id} snap={item}/>
                             </div>
                         )}
+                        endReached={(_) => loadSnaps()}
+                        components={{
+                            Footer: () => {
+                                if (!hasMore.current) {
+                                    return <div className={styles.snapListFooter}> 더 이상 콘텐츠가 없습니다. </div>
+                                }
+
+                                if (listLoading) {
+                                    return <div className={styles.snapListFooter}> 불러오는 중... </div>
+                                }
+
+                                return <div style={{height: 50}}/>;
+                            }
+                        }}
                     />
                 </div>
                 <Modal

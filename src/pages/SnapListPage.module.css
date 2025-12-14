@@ -21,6 +21,15 @@
     padding-bottom: 30px;
 }
 
+.snapListFooter {
+    min-height: 10vh;
+    font-size: 1.2rem;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 /* --- 탭 스위치 영역 --- */
 .tabSwitch {
     display: flex;
