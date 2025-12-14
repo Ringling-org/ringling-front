@@ -1,13 +1,14 @@
-import {createContext, useContext, useState, useEffect, useCallback } from "react";
-import {decodeToken} from "../utils/JwtUtils.js";
-import {logoutWithKakao, silentRefresh } from "../api/authApi.js";
-import {getUserInfo} from "../api/userApi.js";
-import {storeAccessToken} from "./authStore.js";
+import { createContext, useContext, useState, useEffect, useCallback } from "react";
+import { decodeToken } from "../utils/JwtUtils.js";
+import { logoutWithKakao, silentRefresh } from "../api/authApi.js";
+import { getUserInfo } from "../api/userApi.js";
+import { storeAccessToken } from "./authStore.js";
 
 const AuthContext = createContext(null);
 
-export const AuthProvider = ({children}) => {
+export const AuthProvider = ({ children }) => {
     const [userInfo, setUserInfo] = useState(null);
+    const [isAuthInit, setIsAuthInit] = useState(false); // 초기 인증 체크 및 로딩 완료 상태
 
     const login = useCallback(async (accessToken) => {
         await initUserInfo(accessToken);
@@ -60,12 +61,14 @@ export const AuthProvider = ({children}) => {
     const refreshAuthSession = useCallback(async () => {
         try {
             const accessToken = await silentRefresh();
-            login(accessToken);
+            await login(accessToken);
         } catch (error) {
             console.error(error);
             setUserInfo(null);
+        } finally {
+            setIsAuthInit(true); // 인증 체크 종료
         }
-    }, []);
+    }, [login]);
 
     const initUserInfo = useCallback(async (accessToken) => {
         try {
@@ -89,7 +92,7 @@ export const AuthProvider = ({children}) => {
     return (
         <AuthContext.Provider
             value={{
-                userInfo, isLoggedIn: !!userInfo,
+                userInfo, isLoggedIn: !!userInfo, isAuthInit,
                 login, logout
             }}>
             {children}
