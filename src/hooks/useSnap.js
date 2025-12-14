@@ -6,7 +6,7 @@ export default function useSnap() {
     const [activeTab, setActiveTab] = useState('all');
     const [snaps, setSnaps] = useState([])
     const [snapCounts, setSnapCounts] = useState({ allCount: 0, myCount: 0 })
-    const { userInfo, isLoggedIn } = useAuth();
+    const { userInfo, isLoggedIn, isAuthInit } = useAuth();
     const [listLoading, setListLoading] = useState(false);
     const [submitLoading, setSubmitLoading] = useState(false);
     const [guestSnap, setGuestSnap] = useState(null);
@@ -63,8 +63,9 @@ export default function useSnap() {
     };
 
     useEffect(() => {
+        if (!isAuthInit) return;
         loadSnaps(true);
-    }, [activeTab, userInfo])
+    }, [activeTab, userInfo, isAuthInit])
 
     useEffect(() => {
         loadCounts()
