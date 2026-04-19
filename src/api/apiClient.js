@@ -14,16 +14,19 @@ export const request = axios.create({
 })
 
 request.interceptors.response.use(
-    response => {
-        const { code, data, message } = response.data;
+    response => unwrapResponse(response),
+    error => {
+        const { response } = error;
+        const data = response?.data;
 
-        if (code === 'SUCCESS') return data;
+        if (data?.code && data?.message) {
+            return Promise.reject(
+                new ApplicationError(data.message, data.code, response.status, data.errors, error)
+            );
+        }
 
-        return Promise.reject(
-            new ApplicationError(message, code)
-        );
-    },
-    error => Promise.reject(error)
+        return Promise.reject(error);
+    }
 )
 
 requestWithAuth.interceptors.request.use(
@@ -42,19 +45,21 @@ requestWithAuth.interceptors.request.use(
 let isRefreshing = false;
 let refreshPromise = null;
 requestWithAuth.interceptors.response.use(
-    async response => {
-        const { data } = response;
-        const originalRequest = response.config; // 이전 보낸 request 정보
+    response => unwrapResponse(response),
+    error => {
+        const { response } = error;
+        const data = response?.data;
+        const originalRequest = error.config; // 이전 보낸 request 정보
 
-        // 성공 응답: 서버의 래핑 구조 { code, message, data } 중 실제 데이터만 반환
-        if (data.code === 'SUCCESS') return data.data;
+        if (!response || !data?.code || !data?.message) {
+            console.error("Axios interceptor unexpected response error:", error);
+            return Promise.reject(error);
+        }
 
         // 실패: 인증관련 실패 코드가 아닌경우
-        if (!['AU007','AU008'].includes(data.code)) {
-            console.error(`Application Error: ${data.code}`, data.message);
-            // 호출부에서 응답 코드로 분기할 수 있도록 Error를 래핑해 전달
+        if (!shouldRetryWithRefresh(response, data)) {
             return Promise.reject(
-                new ApplicationError(data.message, data.code)
+                new ApplicationError(data.message, data.code, response.status, data.errors, error)
             );
         }
 
@@ -63,7 +68,7 @@ requestWithAuth.interceptors.response.use(
         if (isRefreshing) {
             return refreshPromise.then(newAccessToken => {
                 originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
-                
+
                 return requestWithAuth(originalRequest);
             }).catch(error => {
                 return Promise.reject(error);
@@ -77,16 +82,29 @@ requestWithAuth.interceptors.response.use(
 
             // 토큰 재발행 시도
             refreshPromise = silentRefresh().then(newAccessToken => {
-                if (newAccessToken) {
-                    // 토큰 갱신 성공 이벤트 전달
-                    window.dispatchEvent(new CustomEvent("tokenRefreshed", {
-                        detail: { accessToken: newAccessToken }
-                    }))
-                    return newAccessToken;
-                }
+                window.dispatchEvent(new CustomEvent("tokenRefreshed", {
+                    detail: { accessToken: newAccessToken }
+                }))
+                return newAccessToken;
             }).catch(error => {
-                // 토큰 갱신 실패 이벤트 전달
-                window.dispatchEvent(new CustomEvent("tokenRefreshFailed"));
+                const refreshData = error?.response?.data;
+
+                if (shouldInvalidateSession(refreshData?.code)) {
+                    window.dispatchEvent(new CustomEvent("tokenRefreshFailed"));
+                }
+
+                if (refreshData?.code && refreshData?.message) {
+                    return Promise.reject(
+                        new ApplicationError(
+                            refreshData.message,
+                            refreshData.code,
+                            error.response.status,
+                            refreshData.errors,
+                            error
+                        )
+                    );
+                }
+
                 return Promise.reject(error);
             }).finally(() => {
                 isRefreshing = false;
@@ -100,13 +118,24 @@ requestWithAuth.interceptors.response.use(
             })
         }
 
-        return Promise.reject(response.data);
-    },
-    error => {
-        console.error("Axios interceptor unexpected response error:", error);
-        return Promise.reject(error);
+        return Promise.reject(
+            new ApplicationError(data.message, data.code, response.status, data.errors, error)
+        );
     }
 );
+
+function unwrapResponse(response) {
+    if (response.status === 204) return null;
+    return response.data;
+}
+
+function shouldRetryWithRefresh(response, data) {
+    return response.status === 401 && ['AU007','AU008'].includes(data.code);
+}
+
+function shouldInvalidateSession(code) {
+    return ['AU004','AU005'].includes(code);
+}
 
 export const HEADERS = Object.freeze({
     URL_ENCODED: { 'Content-Type': 'application/x-www-form-urlencoded' },

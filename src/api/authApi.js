@@ -1,6 +1,5 @@
 import {request, requestWithAuth, HEADERS} from './apiClient.js'
 import {storeAccessToken} from "../context/authStore.js";
-import {ApplicationError} from "./ApplicationError.js";
 
 const {
     VITE_APP_BASE_URL,
@@ -33,7 +32,7 @@ export function getKakaoAuthUrl(state = 'login') {
 /**
  * 카카오 인가 코드를 내부 벡엔드 서버로 전송하고, 서버의 응답을 반환합니다.
  * @param {string} code - 카카오로부터 받은 인가 코드
- * @returns {Promise<object>} - 백엔드 서버가 AccessToken 정보
+ * @returns {Promise<string>} - 백엔드 서버가 반환한 access token
  */
 export async function loginWithKakao(code) {
     const result = await request.post(
@@ -63,7 +62,7 @@ export async function logoutWithKakao() {
 /**
  * 회원가입을 요청합니다.
  * @param {object} signupInfo - 회원가입 정보 ( { nickname })
- * @returns {Promise<object>} - 백엔드 서버가 반환하는 JSON 객체
+ * @returns {Promise<null>} - 성공 시 본문 없는 응답
  */
 export async function signUp(signupInfo) {
     const result = await request.post(
